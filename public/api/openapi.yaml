@@ -1,0 +1,357 @@
+openapi: '3.0.1'
+info:
+  title: 'Gabook'
+  description: 'API da gabook'
+
+  version: '1.0'
+
+servers:
+  - url: http://{host}:{port}
+    variables:
+      host:
+        default: localhost
+      port:
+        default: '8000'
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: gabook_session
+
+security:
+  - cookieAuth: []
+
+paths:
+  /api/v1/books/{book}:
+    put:
+      summary: 'Atualizar livro'
+      parameters:
+        - name: book
+          in: path
+          required: true
+          description: ID do livro a ser atualizado
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                    type: string
+                    example: teste
+                sinopse:
+                  type: string
+                  example: sinopse
+                release_year:
+                  type: integer
+                  example: 2008
+                isbn:
+                  type: string
+                  example: 978-92-95055-02-5
+                author_id:
+                  type: integer
+                  example: 1
+                genre_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: atualizar livro
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  sinopse:
+                    type: string
+                  release_year:
+                    type: integer
+                  author_id:
+                    type: integer
+                  genre_id:
+                    type: integer
+                required:
+                  - id
+
+  /api/v1/books:
+    get:
+      summary: 'Pegar todos os livros'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  sinopse:
+                    type: string
+                  release_year:
+                    type: integer
+                  author_id:
+                    type: integer
+                  genre_id:
+                    type: integer
+    post:
+      summary: 'Criar livro'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                    type: string
+                    example: teste
+                sinopse:
+                  type: string
+                  example: sinopse
+                release_year:
+                  type: integer
+                  example: 2008
+                isbn:
+                  type: string
+                  example: 978-92-95055-02-5
+                author_id:
+                  type: integer
+                  example: 1
+                genre_id:
+                  type: integer
+                  example: 1
+              required:
+                -title
+                -sinopse
+                - release_year
+                - author_id
+                - genre_id
+                - isbn
+      responses:
+        '201':
+          description: criar livro
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: teste
+                  sinopse:
+                    type: string
+                    example: sinopse
+                  release_year:
+                    type: integer
+                    example: 2008
+                  isbn:
+                    type: string
+                    example: 978-92-95055-02-5
+                  author_id:
+                    type: integer
+                    example: 1
+                  genre_id:
+                    type: integer
+                    example: 1
+                required:
+                  -title
+                  -sinopse
+                  - release_year
+                  - author_id
+                  - genre_id
+                  - isbn
+    delete:
+      summary: 'Remover livro'
+      responses:
+        '200':
+          description: remover livro
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                required:
+                  - id
+
+  /api/v1/login:
+    post:
+      summary: Login do usuário
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: teste@teste.com
+                password:
+                  type: string
+                  format: password
+                  example: suaSenha123
+              required:
+                - email
+                - password
+      responses:
+        '204':
+          description: Login bem-sucedido
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: gabook_session=abcde12345; Path=/; HttpOnly
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Credenciais inválidas
+
+  /api/v1/register:
+    post:
+      summary: Registro do usuário
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: teste
+                email:
+                  type: string
+                  format: email
+                  example: teste@teste.com
+                password:
+                  type: string
+                  format: password
+                  example: suaSenha123
+              required:
+                - name
+                - email
+                - password
+      responses:
+        '201':
+          description: Registro bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Registro bem-sucedido
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Credenciais inválidas
+
+  /api/v1/authors:
+    get:
+      summary: 'Pegar todos os autores'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: "teste"
+    post:
+      summary: Criar autor
+      operationId: createAuthor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: teste
+              required:
+                - name
+      responses:
+        '201':
+          description: Autor criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: teste
+
+  /api/v1/genres:
+    get:
+      summary: 'Pegar todos os livros'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        genre:
+                          type: string
+                          example: "Ficção"
