@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -16,38 +17,27 @@ class LoginController extends Controller
     {
         if(Auth::check()) return response(null, 403);
         
+        
         User::create($request->validated());
         return response(null, 201);
     }
 
     public function authenticate(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $user = User::where('email',  $request->email)->first();
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => ['Credênciais inválidas'],
+            ]);
+        }
+
+        $user->tokens()->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Usuário logado com sucesso',
+            'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
-        
-        if ($validator->fails()) {
-            return new HttpResponseException(response()->json([
-                'success' => false,
-                'message' => 'Erros de validação',
-                'data' => $validator->errors()
-            ]));
-        }
-
-        $credentials = $validator->validated();
-
-        if (!Auth::attempt($credentials)) {
-            return response([
-                "success" => false,
-                "message" => "Credênciais inválidas",
-                "data" => null
-            ], 401);
-        }
-        
-        $request->session()->regenerate();
-        
-        return response(null, 204);
     }
 
     /*
@@ -55,12 +45,14 @@ class LoginController extends Controller
     */
     public function logout(Request $request)
     {
-        Auth::logout();
+        $user = $request->user('sanctum');
 
-        $request->session()->invalidate();
+        if($user)
+        {
+            $user->currentAccessToken()->delete();
+            return response(null, 204);
+        }
 
-        $request->session()->regenerateToken();
-
-        return response(null, 200);
+        return response(null, 401);
     }
 }
