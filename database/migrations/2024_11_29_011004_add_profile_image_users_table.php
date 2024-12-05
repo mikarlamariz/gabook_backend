@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->string("isbn",17)->nullable(false);
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('profile_image', 455)->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->dropColumn("isbn");
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('profile_image');
         });
     }
 };

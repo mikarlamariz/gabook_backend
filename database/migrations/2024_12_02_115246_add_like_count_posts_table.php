@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->string("isbn",17)->nullable(false);
+        Schema::table('posts', function (Blueprint $table) {
+            $table->integer("like_count")->default(0);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->dropColumn("isbn");
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn("like_count");
         });
     }
 };

@@ -59,4 +59,10 @@ class BookController extends Controller
         return response(null, 204);
     }
 
+    public function getById(Book $book)
+    {
+        $book->with('author:id,name');
+        return new BookResource($book);
+    }
+
 }

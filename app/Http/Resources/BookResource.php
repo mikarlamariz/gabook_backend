@@ -20,8 +20,9 @@ class BookResource extends JsonResource
             "sinopse" => $this->sinopse,
             "release_year" => $this->release_year,
             "evaluation_average" => $this->evaluation_average,
-            "author_id" => $this->author_id,
-            "genre_id" => $this->genre_id
+            "cover" => $this->cover,
+            "genre_id" => $this->genre_id,
+            "author" => $this->author
         ];
     }
 }

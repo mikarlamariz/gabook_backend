@@ -14,3 +14,6 @@ require_once "book.php";
 require_once "genre.php";
 require_once "author.php";
 require_once "status.php";
+require_once "user.php";
+require_once "post.php";
+require_once "library.php";

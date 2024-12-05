@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->string("isbn",17)->nullable(false);
+        Schema::table('users_books', function (Blueprint $table) {
+            $table->timestamps();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->dropColumn("isbn");
+        Schema::table('users_books', function (Blueprint $table) {
+            $table->dropTimestamps();
         });
     }
 };
