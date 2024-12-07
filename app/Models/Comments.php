@@ -5,11 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Author extends Model
+class Comments extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "name"
+        'post_id',
+        'user_id',
+        'content'
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

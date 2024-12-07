@@ -13,4 +13,7 @@ class PostLikes extends Model
         'post_id',
         'user_id',
     ];
+
+    // set table name
+    protected $table = 'likes_posts';
 }

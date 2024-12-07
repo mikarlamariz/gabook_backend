@@ -22,7 +22,9 @@ class BookResource extends JsonResource
             "evaluation_average" => $this->evaluation_average,
             "cover" => $this->cover,
             "genre_id" => $this->genre_id,
-            "author" => $this->author
+            "author" => $this->author,
+            "isInMyLibrary" => $this->isInMyLibrary ? $this->isInMyLibrary : false,
+            "myEvaluation" => $this->myEvaluation
         ];
     }
 }

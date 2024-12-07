@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLibraryRequest;
 use App\Http\Resources\UserBookResource;
+use App\Models\Author;
 use App\Models\UserBooks;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,10 @@ class LibraryController extends Controller
     {
         $user = auth('sanctum')->user();
         $books = UserBooks::where('user_id', $user->id)->with('book')->get();
+
+        foreach ($books as $book) {
+            $book['author'] = Author::where('id', $book->book->author_id)->first();
+        }
 
         return UserBookResource::collection($books);
     }

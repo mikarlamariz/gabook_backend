@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreBookRequest extends FormRequest
+class EvaluateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,8 @@ class StoreBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => 'required|string|max:455',
-            "sinopse" => 'required|string',
-            "release_year" => 'required|integer',
-            "isbn" => 'required|string|max:17',
-            "genre_id" => 'required|integer|exists:genres,id',
+            "book_id" => "required|integer|exists:books,id",
+            "evaluation" => "required|integer|min:1|max:5"
         ];
     }
 
@@ -39,8 +36,7 @@ class StoreBookRequest extends FormRequest
                 'success' => false,
                 'message' => 'Validation errors',
                 'data' => $validator->errors()
-            ],
-            400
+            ]
         ));
     }
 
@@ -48,12 +44,9 @@ class StoreBookRequest extends FormRequest
     {
         return [
             "required" => "O campo :attribute é obrigatório.",
-            "string" => "O campo :attribute deve possuir texto",
-            "title.max" => "O campo titulo deve possuir no máximo 455 caracteres",
-            "cover.image" => "É necessário enviar uma imagem válida",
-            "cover.max" => "O tamanho máximo do arquivo de imagem é 2MB.",
-            "integer" => "O campo :attribute deve possuir número inteiro.",
-            "genre_id.exists" => "Esse gênero não existe.",
+            "integer" => "O campo :attribute deve possuir apenas números inteiros",
+            "max" => "O campo :attribute deve ir no máximo até a nota 5",
+            "min" => "O campo :attribute deve ter no mínimo a nota 1",
         ];
     }
 }

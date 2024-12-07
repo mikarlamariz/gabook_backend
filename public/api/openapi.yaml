@@ -2,7 +2,6 @@ openapi: '3.0.1'
 info:
   title: 'Gabook'
   description: 'API da gabook'
-
   version: '1.0'
 
 servers:
@@ -15,16 +14,15 @@ servers:
 
 components:
   securitySchemes:
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: gabook_session
-
-security:
-  - cookieAuth: []
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # Pode ser JWT ou outro tipo de token
+  security:
+    - bearerAuth: []
 
 paths:
-  /api/v1/books/{book}:
+  /books/{book}:
     put:
       summary: 'Atualizar livro'
       parameters:
@@ -43,8 +41,8 @@ paths:
               type: object
               properties:
                 title:
-                    type: string
-                    example: teste
+                  type: string
+                  example: teste
                 sinopse:
                   type: string
                   example: sinopse
@@ -83,7 +81,7 @@ paths:
                 required:
                   - id
 
-  /api/v1/books:
+  /books:
     get:
       summary: 'Pegar todos os livros'
       responses:
@@ -116,8 +114,8 @@ paths:
               type: object
               properties:
                 title:
-                    type: string
-                    example: teste
+                  type: string
+                  example: teste
                 sinopse:
                   type: string
                   example: sinopse
@@ -134,8 +132,8 @@ paths:
                   type: integer
                   example: 1
               required:
-                -title
-                -sinopse
+                - title
+                - sinopse
                 - release_year
                 - author_id
                 - genre_id
@@ -167,8 +165,8 @@ paths:
                     type: integer
                     example: 1
                 required:
-                  -title
-                  -sinopse
+                  - title
+                  - sinopse
                   - release_year
                   - author_id
                   - genre_id
@@ -188,7 +186,7 @@ paths:
                 required:
                   - id
 
-  /api/v1/login:
+  /login:
     post:
       summary: Login do usuário
       operationId: loginUser
@@ -230,7 +228,7 @@ paths:
                     type: string
                     example: Credenciais inválidas
 
-  /api/v1/register:
+  /register:
     post:
       summary: Registro do usuário
       operationId: registerUser
@@ -278,7 +276,7 @@ paths:
                     type: string
                     example: Credenciais inválidas
 
-  /api/v1/authors:
+  /authors:
     get:
       summary: 'Pegar todos os autores'
       responses:
@@ -333,7 +331,7 @@ paths:
                         type: string
                         example: teste
 
-  /api/v1/genres:
+  /genres:
     get:
       summary: 'Pegar todos os livros'
       responses:
@@ -355,3 +353,98 @@ paths:
                         genre:
                           type: string
                           example: "Ficção"
+  
+  /library:
+    get:
+      summary: 'Pegar todos os livros do usuário'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        book:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: "Ficção"
+                            sinopse:
+                              type: string
+                              example: "Uma história interessante."
+                        user:
+                          type: integer
+                          example: 1
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: "Example Author"
+                        status:
+                          type: string
+                          example: "Lendo"
+    post:
+      summary: Adicionar livro ao usuário
+      operationId: addBookToUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                  example: 1
+              required:
+                - book_id
+      responses:
+        '201':
+          description: Livro adicionado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      book:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          title:
+                            type: string
+                          sinopse:
+                            type: string
+                      user:
+                        type: integer
+                      author:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                      status:
+                        type: string

@@ -21,7 +21,8 @@ class PostResource extends JsonResource
             "book" => $this->book,
             "created_at" => $this->created_at,
             "like_count" => $this->like_count,
-            "user" => $this->user
+            "user" => $this->user,
+            "i_liked" => $this->i_liked ? true : false
         ];
     }
 }
